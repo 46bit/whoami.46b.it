@@ -1,4 +1,5 @@
 use cfg_if::cfg_if;
+use serde::{Deserialize, Serialize};
 use worker::*;
 
 cfg_if! {
@@ -20,4 +21,18 @@ pub fn log_request(req: &Request) {
         req.cf().coordinates().unwrap_or_default(),
         req.cf().region().unwrap_or_else(|| "unknown region".into())
     );
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Config {
+    pub datapoint_endpoint: DatapointEndpointConfig,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DatapointEndpointConfig {
+    pub url: String,
+    pub bearer_token: String,
+    pub submit_token: String,
 }
